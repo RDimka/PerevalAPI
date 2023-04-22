@@ -24,3 +24,5 @@ class PerevalAddedViewSet(viewsets.ModelViewSet):
     queryset = PerevalAdded.objects.all()
     serializer_class = PerevalSerializer
 
+
+
