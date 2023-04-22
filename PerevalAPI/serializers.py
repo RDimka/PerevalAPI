@@ -22,7 +22,7 @@ class PerevalImagesSerializer(serializers.ModelSerializer):
         fields = ('data', 'title',)
 
 
-class PerevalSerializer(serializers.ModelSerializer):
+class PerevalAddedSerializer(serializers.ModelSerializer):
     user = UsersDataSerializer()
     coords = CoordsSerializer()
     images = PerevalImagesSerializer(many=True)
@@ -32,3 +32,18 @@ class PerevalSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'beauty_title', 'title', 'other_titles', 'connect', 'coords', 'level_winter',
                   'level_spring', 'level_summer', 'level_autumn', 'images', 'status')
 
+    def create(self, validated_data, **kwargs):
+        user = validated_data.pop('user')
+        coords = validated_data.pop('coords')
+        images = validated_data.pop('images')
+
+        user = UsersData.objects.create(**user)
+        coords = Coords.objects.create(**coords)
+        pereval = PerevalAdded.objects.create(**validated_data, user=user, coords=coords)
+
+        for image in images:
+            data = image.pop('data')
+            title = image.pop('title')
+            PerevalImages.objects.create(pereval=pereval, data=data, title=title)
+
+        return pereval
