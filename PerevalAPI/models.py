@@ -1,13 +1,18 @@
 from django.db import models
 
 # Create your models here.
+
+
+def get_path_for_uploaded_photos(instance, file):
+    return f'photo/pereval-{instance.pereval.id}/{file}'
+
 #Таблица данных о каждом пользователе
 class UsersData(models.Model):
     firstname = models.CharField(max_length=30, verbose_name='Имя')
     lastname = models.CharField(max_length=30, verbose_name='Отчество')
     surname = models.CharField(max_length=30, verbose_name='Фамилия')
     phone = models.CharField(max_length=15, verbose_name='Номер телефона')
-    email = models.EmailField(max_length=150, unique=True, verbose_name='E-mail')
+    email = models.EmailField(max_length=150, verbose_name='E-mail')
 
 
 class Coords(models.Model):
@@ -25,23 +30,23 @@ class Coords(models.Model):
 
 
 class PerevalAdded(models.Model):
-    new = "new"
-    pending = "pending"
-    accepted = "accepted"
-    rejected = "rejected"
-    STATUS = [
-        (new, "новый"),
-        (pending, "модератор взял в работу"),
-        (accepted, "модерация прошла успешно"),
-        (rejected, "модерация прошла, информация не принята"),
-    ]
+    # new = "new"
+    # pending = "pending"
+    # accepted = "accepted"
+    # rejected = "rejected"
+    # STATUS = [
+    #     ("new", "новый"),
+    #     ("pending", "модератор взял в работу"),
+    #     ("accepted", "модерация прошла успешно"),
+    #     ("rejected", "модерация прошла, информация не принята"),
+    # ]
 
     beauty_title = models.CharField(max_length=255, verbose_name="Название местности", blank=True, null=True)
     title = models.CharField(max_length=255, verbose_name="Название перевала", blank=True, null=True)
     other_titles = models.CharField(max_length=255, verbose_name="Другое название", blank=True, null=True)
 
     add_time = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=10, choices=STATUS, default=new)
+    status = models.CharField(max_length=10, default="new")
     connect = models.TextField(blank=True, null=True)
 
     level_winter = models.CharField(max_length=10, verbose_name='Зима', blank=True, null=True)
@@ -61,7 +66,7 @@ class PerevalImages(models.Model):
     date_added = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=255, verbose_name="Название", blank=True, null=True)
     #обдумать директорию загрузки фото
-    data = models.ImageField(upload_to='photo/', verbose_name="Изображение", blank=True, null=True)
+    data = models.ImageField(upload_to=get_path_for_uploaded_photos, verbose_name="Изображение", blank=True, null=True)
 
     pereval = models.ForeignKey(PerevalAdded, on_delete=models.CASCADE, related_name="images", blank=True, null=True)
 

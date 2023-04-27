@@ -1,0 +1,29 @@
+{
+  "user": {
+    "firstname": "Dima",
+    "lastname": "M",
+    "surname": "Ra",
+    "phone": "100",
+    "email": "rdimka@mail.ru"
+  },
+  "beauty_title": "Ural Pereval",
+  "title": "Dyatlova",
+  "other_titles": "snega",
+  "connect": "gory",
+  "coords": {
+    "latitude": 45.3842,
+    "longitude": 7.1525,
+    "height": 1200
+  },
+  "level_winter": "",
+  "level_spring": "1A",
+  "level_summer": "1A",
+  "level_autumn": "",
+  "images": [
+    {
+      "data": "https://ksp96.ru/uploadedFiles/eshopimages/big/dyat.lyzh-19.03.5-11-17_.jpg",
+      "title": "первая"
+    }
+  ],
+  "status": "new"
+}
