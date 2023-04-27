@@ -7,6 +7,19 @@ class UsersDataSerializer(serializers.ModelSerializer):
         model = UsersData
         fields = '__all__'
 
+    def save(self, **kwargs):
+        self.is_valid()
+        pass_user = UsersData.objects.filter(email=self.validated_data.get('email'))
+        if pass_user.exists():
+            return pass_user.first()
+        else:
+            return UsersData.objects.create(
+                email=self.validated_data.get('email'),
+                firstname=self.validated_data.get('firstname'),
+                lastname=self.validated_data.get('lastname'),
+                surname=self.validated_data.get('surname'),
+                phone=self.validated_data.get('phone'),
+            )
 
 class CoordsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,7 +50,18 @@ class PerevalAddedSerializer(serializers.ModelSerializer):
         coords = validated_data.pop('coords')
         images = validated_data.pop('images')
 
-        user = UsersData.objects.create(**user)
+        #Если пользователь существует, используем существующую запись
+        user_by_email = UsersData.objects.filter(email=user['email'])
+        if user_by_email.exists():
+            user_serializer = UsersDataSerializer(data=user)
+            print("Юзер существует")
+            user_serializer.is_valid(raise_exception=True)
+            print("Юзер валид")
+            user = user_serializer.save()
+            print("Юзер сохранили")
+        else:#если пользователь не существует, создаем его
+            user = UsersData.objects.create(**user)
+
         coords = Coords.objects.create(**coords)
         pereval = PerevalAdded.objects.create(**validated_data, user=user, coords=coords)
 

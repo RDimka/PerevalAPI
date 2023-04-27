@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+
+
 def get_path_for_uploaded_photos(instance, file):
     return f'photo/pereval-{instance.pereval.id}/{file}'
 
@@ -10,7 +12,7 @@ class UsersData(models.Model):
     lastname = models.CharField(max_length=30, verbose_name='Отчество')
     surname = models.CharField(max_length=30, verbose_name='Фамилия')
     phone = models.CharField(max_length=15, verbose_name='Номер телефона')
-    email = models.EmailField(max_length=150, unique=True, verbose_name='E-mail')
+    email = models.EmailField(max_length=150, verbose_name='E-mail')
 
 
 class Coords(models.Model):
