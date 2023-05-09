@@ -23,16 +23,11 @@ class PerevalImagesViewSet(viewsets.ModelViewSet):
 class PerevalAddedViewSet(viewsets.ModelViewSet):
     queryset = PerevalAdded.objects.all()
     serializer_class = PerevalAddedSerializer
+    filterset_fields = ('user__email',)
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
 
-        # response.status_code = 200 if response.status_code == 201 else response.status_code
-        # response_data = {'status': response.status_code,
-        #                 'message': response.status_text,
-        #                 'id': response.data['id'] if response.status_code == 200 else None,
-        #                 }
-        # response.data = response_data
         if response.status_code == 201:
             response.status_code = 200
             response_data = {'status': response.status_code,
@@ -50,5 +45,30 @@ class PerevalAddedViewSet(viewsets.ModelViewSet):
                             'id': None
                             }
         return response
+
+    def partial_update(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+
+        pereval = self.get_object()
+
+        if pereval.status == 'new':
+            serializer = PerevalAddedSerializer(pereval, data=request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                response_data = {'status': '1',
+                                 'message': 'Изменения сохранены'
+                                }
+                return response
+            else:
+                response_data = {'status': '0',
+                                 'message': serializer.errors
+                                 }
+                return response
+
+        else:
+            response_data = {'status': '0',
+                             'message': f"Отклонено! Причина: {pereval.get_status_display()}"
+                             }
+            return response
 
 

@@ -21,7 +21,7 @@ from rest_framework import routers
 from .yasg import urlpatterns as doc_urls
 
 router = routers.DefaultRouter()
-router.register(r'pereval', PerevalAddedViewSet, basename='pereval')
+router.register(r'', PerevalAddedViewSet, basename='pereval')
 
 
 
